@@ -19,11 +19,11 @@
 
     <label for="genders"> Select Gender</label>
     <select #genderInput="ngModel" name="genders" id="genders" [(ngModel)]="employee.genderId" required>
-        <option *ngFor="let singleGender of genders">
+        <option *ngFor="let singleGender of genders" [value]="singleGender.gender">
             {{singleGender.gender}}
         </option>
     </select>
-    <span *ngIf="genderInput.touched">Gender is required</span>
+    <span *ngIf="genderInput.touched && genderInput.invalid">Gender is required</span>
 
     <br>
 
@@ -43,13 +43,13 @@
                 {{expense.type}}
             </option>
         </select>
-        <span *ngIf="expenseTypeInput.touched && expenseTypeInput.hasError('required')">
+        <span *ngIf="expenseTypeInput.touched && expenseTypeInput.invalid">
             Expense Type is required
         </span>
 
         <label for="expenseDate{{i}}">Expense Date</label>
         <input #expenseDateInput="ngModel" type="date" id="expenseDate{{i}}" name="date{{i}}" required [(ngModel)]="singleInExpenseList.expenseDate">
-        <span *ngIf="expenseDateInput.touched && expenseDateInput.hasError('required')">
+        <span *ngIf="expenseDateInput.touched && expenseDateInput.invalid">
             Date is required
         </span>
         <label for="cost{{i}}">Cost</label>
