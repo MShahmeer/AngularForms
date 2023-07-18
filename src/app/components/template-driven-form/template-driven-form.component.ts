@@ -63,7 +63,7 @@ export class TemplateDrivenFormComponent {
   }
   onSubmit(form: NgForm) {
     if (form.valid) {
-      // console.log(this.employee)
+      console.log(this.employee)
     } else {
       console.log("invalid form")
     }

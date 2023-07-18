@@ -1,21 +1,29 @@
 <form #employeeExpense="ngForm" (ngSubmit)="onSubmit(employeeExpense)">
     <label for="employeeName">Name</label>
-    <input type="text" id="name" name="employeeName" [(ngModel)]="employee.name" required>
+    <input #employeeNameInput="ngModel" type="text" id="employeeName" name="employeeName" [(ngModel)]="employee.name" required
+        minlength="3" maxlength="14">
+    <span *ngIf="employeeNameInput.touched && employeeNameInput.hasError('required')">Employee name is required</span>
+    <span
+        *ngIf="employeeNameInput.invalid && (employeeNameInput.hasError('minlength') || employeeNameInput.hasError('maxlength'))">Min
+        3 and Max 14 characters allowed</span>
 
     <label for="contact">Contact</label>
-    <input type="text" id="contact" name="contact" [(ngModel)]="employee.contact" required>
+    <input #contactInput= ngModel type="text" id="contact" name="contact" pattern="^\+\d{12}$
+    " [(ngModel)]="employee.contact" required>
+    <span *ngIf="contactInput.touched && contactInput.hasError('required')">Contact is required</span>
+    <span *ngIf="contactInput.touched && contactInput.hasError('pattern')">Pattern is +92**********</span>
+    
 
     <label for="address">Address</label>
     <textarea name="address" id="address" cols="1" rows="1" [(ngModel)]="employee.address"></textarea>
 
-    <label for="selectGender"> Select Gender</label>
-    <select name="genders" id="genders" [(ngModel)]="employee.genderId">
-        <option disabled>Select Value</option>
+    <label for="genders"> Select Gender</label>
+    <select #genderInput="ngModel" name="genders" id="genders" [(ngModel)]="employee.genderId" required>
         <option *ngFor="let singleGender of genders">
             {{singleGender.gender}}
         </option>
     </select>
-
+    <span *ngIf="genderInput.touched">Gender is required</span>
 
     <br>
 
@@ -24,20 +32,32 @@
     <div *ngFor="let singleInExpenseList of employee.expense let i = index">
 
         <label for="expenseName{{i}}">Expense Name</label>
-        <input type="text" id="expenseName{{i}}" name="expenseName{{i}}" [(ngModel)]="singleInExpenseList.expenseName">
+        <input #expenseNameInput="ngModel" type="text" id="expenseName{{i}}" name="expenseName{{i}}" [(ngModel)]="singleInExpenseList.expenseName" required>
+        <span *ngIf="expenseNameInput.touched && expenseNameInput.hasError('required')">
+            Expense name is requiured
+        </span>
 
         <label for="expenseType{{i}}">Expense Type</label>
-        <select name="expenseType{{i}}" id="expenseType{{i}}" [(ngModel)]="singleInExpenseList.type">
-            <option disabled>Select Expense</option>
+        <select #expenseTypeInput="ngModel" name="expenseType{{i}}" id="expenseType{{i}}" [(ngModel)]="singleInExpenseList.type" required>
             <option *ngFor="let expense of expenses" [value]="expense.type">
                 {{expense.type}}
             </option>
         </select>
+        <span *ngIf="expenseTypeInput.touched && expenseTypeInput.hasError('required')">
+            Expense Type is required
+        </span>
 
         <label for="expenseDate{{i}}">Expense Date</label>
-        <input type="date" id="date{{i}}" name="date{{i}}" required [(ngModel)]="singleInExpenseList.expenseDate">
-
+        <input #expenseDateInput="ngModel" type="date" id="expenseDate{{i}}" name="date{{i}}" required [(ngModel)]="singleInExpenseList.expenseDate">
+        <span *ngIf="expenseDateInput.touched && expenseDateInput.hasError('required')">
+            Date is required
+        </span>
         <label for="cost{{i}}">Cost</label>
-        <input type="number" id="cost{{i}}" name="cost{{i}}" [(ngModel)]="singleInExpenseList.expenseCost" required>
+        <input #expenseCostInput="ngModel" type="number" id="cost{{i}}" name="cost{{i}}" [(ngModel)]="singleInExpenseList.expenseCost" required>
+        <span *ngIf="expenseCostInput.touched">
+            Cost is required
+        </span>
     </div>
+
+    <button type="submit">Submit</button>
 </form>
