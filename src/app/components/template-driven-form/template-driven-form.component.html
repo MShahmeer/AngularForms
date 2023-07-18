@@ -1,0 +1,43 @@
+<form #employeeExpense="ngForm" (ngSubmit)="onSubmit(employeeExpense)">
+    <label for="employeeName">Name</label>
+    <input type="text" id="name" name="employeeName" [(ngModel)]="employee.name" required>
+
+    <label for="contact">Contact</label>
+    <input type="text" id="contact" name="contact" [(ngModel)]="employee.contact" required>
+
+    <label for="address">Address</label>
+    <textarea name="address" id="address" cols="1" rows="1" [(ngModel)]="employee.address"></textarea>
+
+    <label for="selectGender"> Select Gender</label>
+    <select name="genders" id="genders" [(ngModel)]="employee.genderId">
+        <option disabled>Select Value</option>
+        <option *ngFor="let singleGender of genders">
+            {{singleGender.gender}}
+        </option>
+    </select>
+
+
+    <br>
+
+    <button type="button" (click)="addFields()">+</button>
+
+    <div *ngFor="let singleInExpenseList of employee.expense let i = index">
+
+        <label for="expenseName{{i}}">Expense Name</label>
+        <input type="text" id="expenseName{{i}}" name="expenseName{{i}}" [(ngModel)]="singleInExpenseList.expenseName">
+
+        <label for="expenseType{{i}}">Expense Type</label>
+        <select name="expenseType{{i}}" id="expenseType{{i}}" [(ngModel)]="singleInExpenseList.type">
+            <option disabled>Select Expense</option>
+            <option *ngFor="let expense of expenses" [value]="expense.type">
+                {{expense.type}}
+            </option>
+        </select>
+
+        <label for="expenseDate{{i}}">Expense Date</label>
+        <input type="date" id="date{{i}}" name="date{{i}}" required [(ngModel)]="singleInExpenseList.expenseDate">
+
+        <label for="cost{{i}}">Cost</label>
+        <input type="number" id="cost{{i}}" name="cost{{i}}" [(ngModel)]="singleInExpenseList.expenseCost" required>
+    </div>
+</form>
