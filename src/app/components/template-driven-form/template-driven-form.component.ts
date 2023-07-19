@@ -14,12 +14,12 @@ export class TemplateDrivenFormComponent {
     this.addFields()
   }
 
-  //expenseList: Expense[] = []
+  expenseList: Expense[] = []
 
   employee: Employee = {
-    id: 0,
+    id: null,
     name: '',
-    contact: '',
+    contact: "",
     address: '',
     genderId: null,
     expense: []
@@ -47,25 +47,62 @@ export class TemplateDrivenFormComponent {
   ]
 
   addFields() {
-    const newExpense: Expense = {
+    this.expenseList.push({
       expenseId: this.employee.expense.length+1,
       expenseName: "",
       type: '',
       expenseDate: new Date,
-      expenseCost: 0,
-      exployeeId: this.employee.id
-    }
-
-    // this.expenseList.push(newExpense)
-    // this.employee.expense = this.expenseList
-    // console.log(this.employee.expense)
-    this.employee.expense.push(newExpense)
+      expenseCost: null,
+      exployeeId: this.expense.exployeeId
+    })
+    this.employee.expense = this.expenseList
+    console.log(this.expenseList)
   }
+
+  previousCost: number = 0;
+
+  calculateTotalCost(currentCost: number){
+    console.log("before operation",this.previousCost)
+    this.previousCost +=currentCost
+    console.log("After operation",this.previousCost)
+    return this.previousCost;
+  }
+  // calculateTotalCost(expenses){
+  //   expenses.forEach(expense => {
+  //     this.previousCost += expense.expenseCost
+  //     console.log(expense.expenseCost)
+  //   });
+
+  //   console.log("before operation",this.previousCost)
+  //   this.previousCost +=currentCost
+  //   console.log("After operation",this.previousCost)
+  //   return this.previousCost;
+  // }
+
   onSubmit(form: NgForm) {
     if (form.valid) {
-      console.log(this.employee)
+      const formattedExpenses = this.expenseList.map((expense, index) => ({
+        expenseId: index + 1,
+        expenseName: expense.expenseName,
+        type: expense.type,
+        expenseDate: expense.expenseDate,
+        expenseCost: expense.expenseCost,
+        exployeeId: expense.exployeeId
+      }));
+  
+      const data = {
+        employeeName: this.employee.name,
+        contact: this.employee.contact,
+        Address: this.employee.address,
+        Gender: this.employee.genderId,
+        expense: formattedExpenses,
+      };
+  
+      console.log(JSON.parse(JSON.stringify(data)));
     } else {
-      console.log("invalid form")
+      console.log("invalid form");
     }
   }
+  
+
 }
