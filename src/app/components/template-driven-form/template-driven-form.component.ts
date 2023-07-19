@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Employee } from 'src/app/models/Employee.Model';
 import { Expense } from 'src/app/models/Expense.Model';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-template-driven-form',
@@ -10,6 +11,7 @@ import { Expense } from 'src/app/models/Expense.Model';
 })
 export class TemplateDrivenFormComponent {
 
+  constructor(private localStorageService: LocalStorageService) {}
   ngOnInit(){
     this.addFields()
   }
@@ -97,7 +99,16 @@ export class TemplateDrivenFormComponent {
         Gender: this.employee.genderId,
         expense: formattedExpenses,
       };
-  
+      
+      // Get existing employee data from local storage
+      const existingEmployeeData = this.localStorageService.getEmployeeData();
+
+      // Add current employee data to the existing employee data
+      existingEmployeeData.push(data);
+
+      // Save the updated employee data to local storage
+      this.localStorageService.setEmployeeData(existingEmployeeData);
+
       console.log(JSON.parse(JSON.stringify(data)));
     } else {
       console.log("invalid form");
