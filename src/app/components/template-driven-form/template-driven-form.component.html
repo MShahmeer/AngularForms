@@ -17,13 +17,15 @@
     <label for="address">Address</label>
     <textarea name="address" id="address" cols="1" rows="1" [(ngModel)]="employee.address"></textarea>
 
-    <label for="genders"> Select Gender</label>
-    <select #genderInput="ngModel" name="genders" id="genders" [(ngModel)]="employee.genderId" required>
+    <label for="genderId"> Select Gender</label>
+    <select #genderInput="ngModel" name="genderId" id="genderId" [(ngModel)]="employee.genderId" required>
         <option *ngFor="let singleGender of genders" [value]="singleGender.gender">
             {{singleGender.gender}}
         </option>
     </select>
-    <span *ngIf="genderInput.touched && genderInput.invalid">Gender is required</span>
+    <span *ngIf="genderInput.touched && genderInput.invalid">
+        Gender is required
+    </span>
 
     <br>
 

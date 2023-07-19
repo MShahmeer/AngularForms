@@ -21,7 +21,7 @@ export class TemplateDrivenFormComponent {
     name: '',
     contact: '',
     address: '',
-    genderId: 0,
+    genderId: null,
     expense: []
   };
 
