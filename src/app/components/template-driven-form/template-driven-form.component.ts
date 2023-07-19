@@ -19,7 +19,7 @@ export class TemplateDrivenFormComponent {
   expenseList: Expense[] = []
 
   employee: Employee = {
-    id: null,
+    id: 0,
     name: '',
     contact: "",
     address: '',
@@ -33,7 +33,7 @@ export class TemplateDrivenFormComponent {
     type: '',
     expenseDate: undefined,
     expenseCost: 0,
-    exployeeId: 0
+    exployeeId: this.localStorageService.getEmployeeData().length == 0 ? 1: this.localStorageService.getEmployeeData().length+1
   }
 
   genders = [
