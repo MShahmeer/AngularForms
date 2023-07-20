@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from 'src/app/models/Employee.Model';
 import { Expense } from 'src/app/models/Expense.Model';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
@@ -11,16 +12,15 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 })
 export class TemplateDrivenFormComponent {
 
-  constructor(private localStorageService: LocalStorageService) {}
-  ngOnInit(){
-    this.addFields()
-  }
-
+  formEditRequest: boolean = true
+  employeeData: any[]
+  employeeId: number
+  localStorageEmployee: any
   expenseList: Expense[] = []
 
   employee: Employee = {
     id: 0,
-    name: '',
+    name: "",
     contact: "",
     address: '',
     genderId: null,
@@ -33,7 +33,7 @@ export class TemplateDrivenFormComponent {
     type: '',
     expenseDate: undefined,
     expenseCost: 0,
-    exployeeId: this.localStorageService.getEmployeeData().length == 0 ? 1: this.localStorageService.getEmployeeData().length+1
+    exployeeId: this.localStorageService.getEmployeeData().length == 0 ? 1 : this.localStorageService.getEmployeeData().length + 1
   }
 
   genders = [
@@ -48,9 +48,31 @@ export class TemplateDrivenFormComponent {
     { id: 3, type: "Genitorial" }
   ]
 
+  constructor(private localStorageService: LocalStorageService, private activeRoute: ActivatedRoute, private router: Router) { }
+
+  ngOnInit() {
+    this.employeeData = this.localStorageService.getEmployeeData()
+    this.activeRoute.paramMap.subscribe(params => {
+      this.employeeId = Number(params?.get('id'))+1;
+      console.log(this.employeeId)
+    // this.activeRoute.queryParams.subscribe(params => {
+    //   const idParam = params['id'];
+    //   this.employeeId = idParam ? Number(idParam) + 1 : null;
+      if (this.employeeId) {
+        this.employee = this.employeeData.find((employee: Employee) => employee.id == this.employeeId);
+      }
+    });
+    if (!this.employeeId) {
+      console.log("Not")
+      this.formEditRequest = false
+      this.addFields()
+    }
+  }
+
   addFields() {
+    debugger
     this.expenseList.push({
-      expenseId: this.employee.expense.length+1,
+      expenseId: this.employee.expense.length + 1,
       expenseName: "",
       type: '',
       expenseDate: new Date,
@@ -63,10 +85,10 @@ export class TemplateDrivenFormComponent {
 
   previousCost: number = 0;
 
-  calculateTotalCost(currentCost: number){
-    console.log("before operation",this.previousCost)
-    this.previousCost +=currentCost
-    console.log("After operation",this.previousCost)
+  calculateTotalCost(currentCost: number) {
+    console.log("before operation", this.previousCost)
+    this.previousCost += currentCost
+    console.log("After operation", this.previousCost)
     return this.previousCost;
   }
   // calculateTotalCost(expenses){
@@ -83,38 +105,48 @@ export class TemplateDrivenFormComponent {
 
   onSubmit(form: NgForm) {
     if (form.valid) {
-      const formattedExpenses = this.expenseList.map((expense, index) => ({
-        expenseId: index + 1,
-        expenseName: expense.expenseName,
-        type: expense.type,
-        expenseDate: expense.expenseDate,
-        expenseCost: expense.expenseCost,
-        exployeeId: expense.exployeeId
-      }));
-  
-      const data = {
-        id: this.localStorageService.getEmployeeData().length == 0 ? 1: this.localStorageService.getEmployeeData().length+1,
-        employeeName: this.employee.name,
-        contact: this.employee.contact,
-        Address: this.employee.address,
-        Gender: this.employee.genderId,
-        expense: formattedExpenses,
-      };
-      
-      // Get existing employee data from local storage
-      const existingEmployeeData = this.localStorageService.getEmployeeData();
+      if (this.formEditRequest) {
+        if (this.employee) {
+          const index = this.employeeData.findIndex((employee: Employee) => employee.id === this.employee?.id);
 
-      // Add current employee data to the existing employee data
-      existingEmployeeData.push(data);
+          if (index !== -1) {
+            this.employeeData[index] = this.employee;
+            localStorage.setItem('expenseform', JSON.stringify(this.employeeData));
+            this.router.navigate(['/employees']);
+          }
+        }
+      } else {
+        const formattedExpenses = this.expenseList.map((expense, index) => ({
+          expenseId: index + 1,
+          expenseName: expense.expenseName,
+          type: expense.type,
+          expenseDate: expense.expenseDate,
+          expenseCost: expense.expenseCost,
+          exployeeId: expense.exployeeId
+        }));
 
-      // Save the updated employee data to local storage
-      this.localStorageService.setEmployeeData(existingEmployeeData);
+        const data = {
+          id: this.localStorageService.getEmployeeData().length == 0 ? 1 : this.localStorageService.getEmployeeData().length + 1,
+          name: this.employee.name,
+          contact: this.employee.contact,
+          address: this.employee.address,
+          genderId: this.employee.genderId,
+          expense: formattedExpenses,
+        };
 
-      console.log(JSON.parse(JSON.stringify(data)));
+        // Get existing employee data from local storage
+        const existingEmployeeData = this.localStorageService.getEmployeeData();
+
+        // Add current employee data to the existing employee data
+        existingEmployeeData.push(data);
+
+        // Save the updated employee data to local storage
+        this.localStorageService.setEmployeeData(existingEmployeeData);
+
+        console.log(JSON.parse(JSON.stringify(data)));
+      }
     } else {
       console.log("invalid form");
     }
   }
-  
-
 }

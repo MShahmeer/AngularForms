@@ -12,9 +12,9 @@
         </thead>
         <tbody>
             <tr *ngFor="let employee of employeeData; let i = index">
-                <td>{{employee.employeeName}}</td>
+                <td>{{employee.name}}</td>
                 <td>{{employee.contact}}</td>
-                <td>{{employee.Address}}</td>
+                <td>{{employee.address}}</td>
                 <td>{{getTotalExpanse(employee)}}</td>
                 <td>
                     <button (click)="editEmployee(i)">Edit</button>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from 'src/app/models/Employee.Model';
+import { Expense } from 'src/app/models/Expense.Model';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
@@ -24,22 +25,29 @@ export class EditEmployeeComponent {
     });
   }
 
-  onNameChange(event: Event): void {
+  onFieldChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (this.employee) {
       this.employee.employeeName = target.value;
     }
   }
 
+  onGenderTypeChange(event: Event, employee): void {
+    const target = event.target as HTMLSelectElement;
+    employee.Gender = target.value
+  }
+  onExpenseTypeChange(event: Event, expense: Expense): void {
+    const target = event.target as HTMLSelectElement;
+    expense.type = target.value;
+  }
+
   onSave(): void {
     if (this.employee) {
       const index = this.employeeData.findIndex((employee: Employee) => employee.id === this.employee?.id);
+      
       if (index !== -1) {
-        // Update the employee data in the array
         this.employeeData[index] = this.employee;
-        // Update the local storage with the modified data
         localStorage.setItem('expenseform', JSON.stringify(this.employeeData));
-        // Redirect back to the employee list page after saving
         this.router.navigate(['/employees']);
       }
     }
