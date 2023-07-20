@@ -93,6 +93,7 @@ export class TemplateDrivenFormComponent {
       }));
   
       const data = {
+        id: this.localStorageService.getEmployeeData().length == 0 ? 1: this.localStorageService.getEmployeeData().length+1,
         employeeName: this.employee.name,
         contact: this.employee.contact,
         Address: this.employee.address,

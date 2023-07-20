@@ -1,0 +1,12 @@
+<h2>Edit Employee</h2>
+
+<form>
+  <div>
+    <label for="employeeName">Name:</label>
+    <input type="text" id="employeeName" name="employeeName" [value]="employee?.employeeName" (input)="onNameChange($event)">
+  </div>
+
+  <!-- Add other employee fields here -->
+
+  <button type="button" (click)="onSave()">Save</button>
+</form>

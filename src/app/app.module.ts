@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { TemplateDrivenFormComponent } from './components/template-driven-form/template-driven-form.component';
 import { FormsModule } from '@angular/forms';
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
+import { EditEmployeeComponent } from './components/edit-employee/edit-employee.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TemplateDrivenFormComponent,
-    EmployeeListComponent
+    EmployeeListComponent,
+    EditEmployeeComponent
   ],
   imports: [
     BrowserModule,
