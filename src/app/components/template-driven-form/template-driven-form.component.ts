@@ -15,7 +15,6 @@ export class TemplateDrivenFormComponent {
   formEditRequest: boolean = true
   employeeData: any[]
   employeeId: number
-  localStorageEmployee: any
   expenseList: Expense[] = []
 
   employee: Employee = {
