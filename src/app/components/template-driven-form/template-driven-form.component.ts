@@ -52,16 +52,20 @@ export class TemplateDrivenFormComponent {
 
   ngOnInit() {
     this.employeeData = this.localStorageService.getEmployeeData()
-    this.activeRoute.paramMap.subscribe(params => {
-      this.employeeId = Number(params?.get('id'))+1;
+    this.employeeId = Number(this.activeRoute.snapshot.params['id']) + 1
+    if (this.employeeId) {
       console.log(this.employeeId)
-    // this.activeRoute.queryParams.subscribe(params => {
-    //   const idParam = params['id'];
-    //   this.employeeId = idParam ? Number(idParam) + 1 : null;
-      if (this.employeeId) {
-        this.employee = this.employeeData.find((employee: Employee) => employee.id == this.employeeId);
-      }
-    });
+      this.employee = this.employeeData.find((employee: Employee) => employee.id == this.employeeId);
+      this.getTotalExpanse(this.employee)
+    }
+    // this.activeRoute.paramMap.subscribe(params => {
+    //   this.employeeId = Number(params?.get('id'))+1;
+    //   console.log(this.employeeId)
+    //   if (this.employeeId) {
+    //     this.employee = this.employeeData.find((employee: Employee) => employee.id == this.employeeId);
+    //   }
+    // });
+
     if (!this.employeeId) {
       console.log("Not")
       this.formEditRequest = false
@@ -69,8 +73,17 @@ export class TemplateDrivenFormComponent {
     }
   }
 
+  getTotalExpanse(employee: Employee): number {
+    let totalExpense = 0;
+    employee.expense.forEach(singleExpense => {
+      totalExpense += singleExpense.expenseCost;
+    });
+    this.previousCost= totalExpense;
+    return totalExpense;
+  }
+
+
   addFields() {
-    debugger
     this.expenseList.push({
       expenseId: this.employee.expense.length + 1,
       expenseName: "",
@@ -102,6 +115,8 @@ export class TemplateDrivenFormComponent {
   //   console.log("After operation",this.previousCost)
   //   return this.previousCost;
   // }
+
+  
 
   onSubmit(form: NgForm) {
     if (form.valid) {
